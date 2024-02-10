@@ -5,13 +5,14 @@ screen = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("Name Of The game")
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 64)
+
 #main_dir = os.path.split(os.path.abspath(__file__))[0]
 #data_dir = os.path.join(main_dir, "data")
 #dishita - made change
 #Nhu - made change 
 def main():
     # pygame setup    
-    p1 = PlayerWasd("./exampleShroom.png")
+    p1 = PlayerWasd("./gingerbreadman.png")
     p2 = PlayerMouse("./sprite.png")
     allsprites = pygame.sprite.RenderPlain((p1,p2))
     running = True
@@ -23,7 +24,7 @@ def main():
                 running = False
 
         # fill the screen with a color to wipe away anything from last frame
-        screen.fill("purple")
+        screen.fill("white")
     #################################################################
         # RENDER YOUR GAME HERE
         allsprites.update()
@@ -49,30 +50,32 @@ class PlayerMouse(pygame.sprite.Sprite):
         pos = pygame.mouse.get_pos()
         self.rect.topleft = pos
 
-
-
-
-
-
 class PlayerWasd(pygame.sprite.Sprite):
-    
+
     def __init__(self,image):
         pygame.sprite.Sprite.__init__(self)
-        
         self.speed = 15
+        self.gravity = 5
+        self.jumped = False
         self.image, self.rect = load_image(image,scale=.5)#adjust scale to get character sizing right
         self.rect.topleft = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)#adjust arugments for disired starting position
     def update(self):
         keys = pygame.key.get_pressed()
         (x,y) = self.rect.topleft
-        if keys[pygame.K_w]:
-            y -= self.speed
+#        y+=self.gravity
         if keys[pygame.K_s]:
-            y += self.speed
+            y+=self.speed
+        if keys[pygame.K_w]:
+            y-=self.speed
         if keys[pygame.K_a]:
             x -= self.speed
         if keys[pygame.K_d]:
             x += self.speed
+        if keys[pygame.K_SPACE] and not self.jumped:
+            y-=10
+            self.jumped = True
+        if y > screen.get_height()-30:
+            self.jumped = False
         self.rect.topleft = (x,y)
 
 
