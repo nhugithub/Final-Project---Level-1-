@@ -62,21 +62,26 @@ class PlayerWasd(pygame.sprite.Sprite):
     def update(self):
         keys = pygame.key.get_pressed()
         (x,y) = self.rect.topleft
+        yvol = self.gravity
+        xvol = 0
 #        y+=self.gravity
         if keys[pygame.K_s]:
-            y+=self.speed
+            yvol+=self.speed
         if keys[pygame.K_w]:
-            y-=self.speed
+            yvol-=self.speed
         if keys[pygame.K_a]:
-            x -= self.speed
+            xvol -= self.speed
         if keys[pygame.K_d]:
-            x += self.speed
+            xvol += self.speed
         if keys[pygame.K_SPACE] and not self.jumped:
-            y-=10
+            yvol -=100
             self.jumped = True
-        if y > screen.get_height()-30:
+            self.gravity = 5
+        if y > screen.get_height()-100:
             self.jumped = False
-        self.rect.topleft = (x,y)
+            self.gravity = 0
+
+        self.rect.topleft = (x+ xvol, y +yvol)
 
 
 def writeToScreen(msg, x, y):
