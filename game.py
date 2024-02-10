@@ -64,15 +64,12 @@ class PlayerWasd(pygame.sprite.Sprite):
         (x,y) = self.rect.topleft
         yvol = self.gravity
         xvol = 0
-#        y+=self.gravity
-        if keys[pygame.K_s]:
-            yvol+=self.speed
-        if keys[pygame.K_w]:
-            yvol-=self.speed
+#       
         if keys[pygame.K_a]:
             xvol -= self.speed
         if keys[pygame.K_d]:
             xvol += self.speed
+        
         if keys[pygame.K_SPACE] and not self.jumped:
             yvol -=100
             self.jumped = True
