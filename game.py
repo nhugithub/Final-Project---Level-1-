@@ -66,6 +66,8 @@ class CatPaw(pygame.sprite.Sprite):
     def update(self):
         (x,y) = self.rect.topleft
         self.rect.topleft = (x-10,y)
+        if (x==-0):
+            self.kill
 
 class PlayerWasd(pygame.sprite.Sprite):
 
