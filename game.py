@@ -29,7 +29,7 @@ def main():
         screen.blit(bg_img,(i,0))
         screen.blit(bg_img,(width+i,0))
         count+=1
-        if(count%random.randint(60, 100)==0):
+        if(count%random.randint(70, 100)==0) :
             allsprites.add(CatPaw("./cat_paw.png"))
         if(i==-width):
            screen.blit(bg_img,(width+i,0))
@@ -78,7 +78,7 @@ class PlayerWasd(pygame.sprite.Sprite):
         self.jumped = False
         self.jumpCount=20
         self.image, self.rect = load_image(image,scale=1)#adjust scale to get character sizing right
-        self.rect.topleft = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)#adjust arugments for disired starting position
+        self.rect.topleft = pygame.Vector2(screen.get_width()/100, screen.get_height() / 2)#adjust arugments for disired starting position
     def update(self):
         keys = pygame.key.get_pressed()
         (x,y) = self.rect.topleft
