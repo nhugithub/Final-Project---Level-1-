@@ -15,8 +15,8 @@ font = pygame.font.Font(None, 64)
 def main():
     # pygame setup    
     p1 = PlayerWasd("./breadman2.png")
-    #p2 = PlayerMouse("./sprite.png")
-    allsprites = pygame.sprite.RenderPlain((p1))
+    p2 = CatPaw("./cat_paw.png")
+    allsprites = pygame.sprite.RenderPlain((p1, p2))
     running = True
     bg_img = pygame.image.load('starter-background.png')
     bg_img = pygame.transform.scale(bg_img,(width, height))
@@ -29,7 +29,7 @@ def main():
         if (i==-width):
            screen.blit(bg_img,(width+i,0))
            i=0
-        i-=4
+        i-=10
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
@@ -51,15 +51,15 @@ def main():
     pygame.quit()
 
 
-#class PlayerMouse(pygame.sprite.Sprite):
+class CatPaw(pygame.sprite.Sprite):
     def __init__(self, image):
         pygame.sprite.Sprite.__init__(self)
-        self.speed = 15
-        self.image, self.rect = load_image(image,scale=.1)#adjust scale to get character sizing right
-        self.rect.topleft = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)#adjust arugments for disired starting position
+#        self.speed = 15
+        self.image, self.rect = load_image(image,scale=.2)#adjust scale to get character sizing right
+        self.rect.topleft = pygame.Vector2(screen.get_width()-70, screen.get_height()-100)#adjust arugments for disired starting position
     def update(self):
-        pos = pygame.mouse.get_pos()
-        self.rect.topleft = pos
+        (x,y) = self.rect.topleft
+        self.rect.topleft = (x-10,y)
 
 class PlayerWasd(pygame.sprite.Sprite):
 
@@ -69,24 +69,19 @@ class PlayerWasd(pygame.sprite.Sprite):
         self.gravity = 5
         self.jumped = False
         self.jumpCount=20
-        self.image, self.rect = load_image(image,scale=.5)#adjust scale to get character sizing right
+        self.image, self.rect = load_image(image,scale=1)#adjust scale to get character sizing right
         self.rect.topleft = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)#adjust arugments for disired starting position
     def update(self):
         keys = pygame.key.get_pressed()
         (x,y) = self.rect.topleft
         yvol = self.gravity
         xvol = 0
-#       
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            xvol -= self.speed
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            xvol += self.speed
-        
+
         if keys[pygame.K_SPACE] and not self.jumped:
-            yvol -=80
+            yvol -=150
             self.jumped = True
-            self.gravity = 5
-        if y > screen.get_height()-175:
+            self.gravity = 8
+        if y > screen.get_height()-290:
             self.jumped = False
             self.gravity = 0
 
