@@ -1,7 +1,9 @@
 import pygame
 import os
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+width = 1280
+height = 720
+screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Name Of The game")
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 64)
@@ -12,19 +14,28 @@ font = pygame.font.Font(None, 64)
 #Nhu - made change 
 def main():
     # pygame setup    
-    p1 = PlayerWasd("./gingerbreadman.png")
+    p1 = PlayerWasd("./breadman2.png")
     p2 = PlayerMouse("./sprite.png")
     allsprites = pygame.sprite.RenderPlain((p1,p2))
     running = True
+    bg_img = pygame.image.load('starter-background.png')
+    bg_img = pygame.transform.scale(bg_img,(width, height))
+    i = 0
+
     while running:
+        screen.fill((0,0,0))
+        screen.blit(bg_img,(i,0))
+        screen.blit(bg_img,(width+i,0))
+        if (i==-width):
+           screen.blit(bg_img,(width+i,0))
+           i=0
+        i-=1
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-
-        # fill the screen with a color to wipe away anything from last frame
-        screen.fill("white")
+               running = False
+        
     #################################################################
         # RENDER YOUR GAME HERE
         allsprites.update()
@@ -57,6 +68,7 @@ class PlayerWasd(pygame.sprite.Sprite):
         self.speed = 15
         self.gravity = 5
         self.jumped = False
+        self.jumpCount=20
         self.image, self.rect = load_image(image,scale=.5)#adjust scale to get character sizing right
         self.rect.topleft = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)#adjust arugments for disired starting position
     def update(self):
@@ -65,16 +77,16 @@ class PlayerWasd(pygame.sprite.Sprite):
         yvol = self.gravity
         xvol = 0
 #       
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             xvol -= self.speed
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             xvol += self.speed
         
         if keys[pygame.K_SPACE] and not self.jumped:
-            yvol -=100
+            yvol -=70
             self.jumped = True
             self.gravity = 5
-        if y > screen.get_height()-100:
+        if y > screen.get_height()-150:
             self.jumped = False
             self.gravity = 0
 
@@ -101,7 +113,8 @@ def load_image(name, colorkey=None, scale=1):
         image.set_colorkey(colorkey, pygame.RLEACCEL)
     return image, image.get_rect()
 
-
+#make tile background/rolling background 
+#create cat paws w/ collision coding stuff - make a class "cat paw" (same as player class - update/constructor but change location + have ex parameter to change location)
 
 
 
