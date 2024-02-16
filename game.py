@@ -15,8 +15,8 @@ font = pygame.font.Font(None, 64)
 def main():
     # pygame setup    
     p1 = PlayerWasd("./breadman2.png")
-    p2 = PlayerMouse("./sprite.png")
-    allsprites = pygame.sprite.RenderPlain((p1,p2))
+    #p2 = PlayerMouse("./sprite.png")
+    allsprites = pygame.sprite.RenderPlain((p1))
     running = True
     bg_img = pygame.image.load('starter-background.png')
     bg_img = pygame.transform.scale(bg_img,(width, height))
@@ -29,7 +29,7 @@ def main():
         if (i==-width):
            screen.blit(bg_img,(width+i,0))
            i=0
-        i-=1
+        i-=4
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
@@ -51,7 +51,7 @@ def main():
     pygame.quit()
 
 
-class PlayerMouse(pygame.sprite.Sprite):
+#class PlayerMouse(pygame.sprite.Sprite):
     def __init__(self, image):
         pygame.sprite.Sprite.__init__(self)
         self.speed = 15
@@ -83,10 +83,10 @@ class PlayerWasd(pygame.sprite.Sprite):
             xvol += self.speed
         
         if keys[pygame.K_SPACE] and not self.jumped:
-            yvol -=70
+            yvol -=80
             self.jumped = True
             self.gravity = 5
-        if y > screen.get_height()-150:
+        if y > screen.get_height()-175:
             self.jumped = False
             self.gravity = 0
 
