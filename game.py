@@ -1,5 +1,6 @@
 import pygame
 import os
+import random
 pygame.init()
 width = 1280
 height = 720
@@ -21,15 +22,20 @@ def main():
     bg_img = pygame.image.load('starter-background.png')
     bg_img = pygame.transform.scale(bg_img,(width, height))
     i = 0
+    count = 0
 
     while running:
         screen.fill((0,0,0))
         screen.blit(bg_img,(i,0))
         screen.blit(bg_img,(width+i,0))
-        if (i==-width):
+        count+=1
+        if(count%random.randint(60, 100)==0):
+            allsprites.add(CatPaw("./cat_paw.png"))
+        if(i==-width):
            screen.blit(bg_img,(width+i,0))
            i=0
         i-=10
+
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
@@ -56,7 +62,7 @@ class CatPaw(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 #        self.speed = 15
         self.image, self.rect = load_image(image,scale=.2)#adjust scale to get character sizing right
-        self.rect.topleft = pygame.Vector2(screen.get_width()-70, screen.get_height()-100)#adjust arugments for disired starting position
+        self.rect.topleft = pygame.Vector2(screen.get_width()-70, screen.get_height()-120)#adjust arugments for disired starting position
     def update(self):
         (x,y) = self.rect.topleft
         self.rect.topleft = (x-10,y)
@@ -108,9 +114,9 @@ def load_image(name, colorkey=None, scale=1):
         image.set_colorkey(colorkey, pygame.RLEACCEL)
     return image, image.get_rect()
 
-#make tile background/rolling background 
 #create cat paws w/ collision coding stuff - make a class "cat paw" (same as player class - update/constructor but change location + have ex parameter to change location)
-
+#boolean value at top of file that is 'lost' (to indicate winning or losing), start as false, if anything causes loss set to true
+#if(lost): -> print "you lost" on screen or something 
 
 
 
