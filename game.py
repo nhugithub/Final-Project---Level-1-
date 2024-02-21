@@ -23,19 +23,23 @@ def main():
     bg_img = pygame.transform.scale(bg_img,(width, height))
     i = 0
     count = 0
-
+    min_space = 0
     while running:
         screen.fill((0,0,0))
         screen.blit(bg_img,(i,0))
         screen.blit(bg_img,(width+i,0))
         count+=1
-        if(count%random.randint(70, 100)==0) :
+        min_space+=1
+        if(count%random.randint(40,85)==0 and min_space>50) :
             allsprites.add(CatPaw("./cat_paw.png"))
+            min_space = 0
         if(i==-width):
            screen.blit(bg_img,(width+i,0))
            i=0
         i-=10
-
+        if p1.rect.colliderect(p2.rect):
+            p1.kill
+            
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
@@ -66,7 +70,7 @@ class CatPaw(pygame.sprite.Sprite):
     def update(self):
         (x,y) = self.rect.topleft
         self.rect.topleft = (x-10,y)
-        if (x==-0):
+        if (x==0):
             self.kill
 
 class PlayerWasd(pygame.sprite.Sprite):
@@ -86,13 +90,13 @@ class PlayerWasd(pygame.sprite.Sprite):
         xvol = 0
 
         if keys[pygame.K_SPACE] and not self.jumped:
-            yvol -=150
+            yvol -=170
             self.jumped = True
             self.gravity = 8
         if y > screen.get_height()-290:
             self.jumped = False
             self.gravity = 0
-
+        
         self.rect.topleft = (x+ xvol, y +yvol)
 
 
