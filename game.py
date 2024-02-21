@@ -23,6 +23,7 @@ def main():
     bg_img = pygame.transform.scale(bg_img,(width, height))
     i = 0
     count = 0
+    Cat_Paws = [p2]
     min_space = 0
     while running:
         screen.fill((0,0,0))
@@ -31,15 +32,18 @@ def main():
         count+=1
         min_space+=1
         if(count%random.randint(40,85)==0 and min_space>50) :
-            allsprites.add(CatPaw("./cat_paw.png"))
+            current_paw = CatPaw("./cat_paw.png")
+            allsprites.add(current_paw)
+            Cat_Paws.append(current_paw)
             min_space = 0
         if(i==-width):
            screen.blit(bg_img,(width+i,0))
            i=0
         i-=10
-        if p1.rect.colliderect(p2.rect):
-            p1.kill
-            
+        for paw in Cat_Paws:
+            if p1.rect.colliderect(paw.rect):
+                p1.kill() 
+                
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
@@ -66,12 +70,12 @@ class CatPaw(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 #        self.speed = 15
         self.image, self.rect = load_image(image,scale=.2)#adjust scale to get character sizing right
-        self.rect.topleft = pygame.Vector2(screen.get_width()-70, screen.get_height()-120)#adjust arugments for disired starting position
+        self.rect.topleft = pygame.Vector2(screen.get_width()-60, screen.get_height()-100)#adjust arugments for disired starting position
     def update(self):
         (x,y) = self.rect.topleft
         self.rect.topleft = (x-10,y)
-        if (x==0):
-            self.kill
+        if (x==-10):
+            self.kill()
 
 class PlayerWasd(pygame.sprite.Sprite):
 
@@ -82,7 +86,7 @@ class PlayerWasd(pygame.sprite.Sprite):
         self.jumped = False
         self.jumpCount=20
         self.image, self.rect = load_image(image,scale=1)#adjust scale to get character sizing right
-        self.rect.topleft = pygame.Vector2(screen.get_width()/100, screen.get_height() / 2)#adjust arugments for disired starting position
+        self.rect.topleft = pygame.Vector2(screen.get_width()/90, screen.get_height() / 2)#adjust arugments for disired starting position
     def update(self):
         keys = pygame.key.get_pressed()
         (x,y) = self.rect.topleft
@@ -90,10 +94,10 @@ class PlayerWasd(pygame.sprite.Sprite):
         xvol = 0
 
         if keys[pygame.K_SPACE] and not self.jumped:
-            yvol -=170
+            yvol -=190
             self.jumped = True
-            self.gravity = 8
-        if y > screen.get_height()-290:
+            self.gravity = 5
+        if y > screen.get_height()-200:
             self.jumped = False
             self.gravity = 0
         
