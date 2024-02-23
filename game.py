@@ -57,7 +57,7 @@ def main():
                 bg_img = pygame.transform.scale(bg_img,(width, height))
                 screen.blit(bg_img, (0,0))
                 running_bg = False
-        if(pawcount==2):
+        if(pawcount==11):
             bg_img = pygame.image.load('./you_lost.png')
             bg_img = pygame.transform.scale(bg_img,(width, height))
             screen.blit(bg_img, (0,0))
