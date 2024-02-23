@@ -10,6 +10,7 @@ clock = pygame.time.Clock()
 font = pygame.font.Font(None, 64)
 Cat_Paws = []
 win = False
+pawcount=0
 #main_dir = os.path.split(os.path.abspath(__file__))[0]
 #data_dir = os.path.join(main_dir, "data")
 #dishita - made change
@@ -23,7 +24,6 @@ def main():
     bg_img = pygame.image.load('starter-background.png')
     bg_img = pygame.transform.scale(bg_img,(width, height))
     i = 0
-    pawcount = 0
     count = 0
     Cat_Paws.append(p2)
     min_space = 0
@@ -45,8 +45,7 @@ def main():
             current_paw = CatPaw("./cat_paw.png")
             allsprites.add(current_paw)
             Cat_Paws.append(current_paw)
-            min_space = 0
-            pawcount +=1
+            min_space = 0 
         
         for paw in Cat_Paws:
             if not run_paws: 
@@ -58,13 +57,13 @@ def main():
                 bg_img = pygame.transform.scale(bg_img,(width, height))
                 screen.blit(bg_img, (0,0))
                 running_bg = False
-        if(pawcount==3):
+        if(pawcount==2):
             bg_img = pygame.image.load('./you_lost.png')
             bg_img = pygame.transform.scale(bg_img,(width, height))
             screen.blit(bg_img, (0,0))
             running_bg = False
             run_paws = False
-            global win 
+            global win
             win = True
 
 
@@ -102,6 +101,8 @@ class CatPaw(pygame.sprite.Sprite):
         if (x==-10):
             Cat_Paws.remove(self)
             self.kill()
+            global pawcount
+            pawcount+=1
 
 class PlayerWasd(pygame.sprite.Sprite):
 
@@ -131,12 +132,11 @@ class PlayerWasd(pygame.sprite.Sprite):
         if y > screen.get_height()-200:
             self.jumped = False
             self.gravity = 0
-        while win:
-             if keys[pygame.K_LEFT]:
-                x-=5
+        if keys[pygame.K_LEFT] and win:
+            x-=50
 
-             if keys[pygame.K_RIGHT]:
-                x+=5
+        if keys[pygame.K_RIGHT] and win:
+            x+=50
         self.rect.topleft = (x+ xvol, y +yvol)
         (hx,hy) = self.hitbox.topleft
         self.hitbox.topleft = (hx + xvol, y + yvol)
