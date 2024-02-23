@@ -5,7 +5,7 @@ pygame.init()
 width = 1280
 height = 720
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Name Of The game")
+pygame.display.set_caption("Catch Me If You Can")
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 64)
 Cat_Paws = []
