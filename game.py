@@ -9,6 +9,7 @@ pygame.display.set_caption("Name Of The game")
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 64)
 Cat_Paws = []
+win = False
 #main_dir = os.path.split(os.path.abspath(__file__))[0]
 #data_dir = os.path.join(main_dir, "data")
 #dishita - made change
@@ -22,9 +23,11 @@ def main():
     bg_img = pygame.image.load('starter-background.png')
     bg_img = pygame.transform.scale(bg_img,(width, height))
     i = 0
+    pawcount = 0
     count = 0
     Cat_Paws.append(p2)
     min_space = 0
+    run_paws = True
     running_bg = True
     while running:
         if(running_bg):
@@ -34,22 +37,38 @@ def main():
                 screen.blit(bg_img,(width+i,0))
                 i=0
             i-=10
+        else: 
+            screen.blit(bg_img,(0,0))
         count+=1
         min_space+=1
-        if(count%random.randint(40,85)==0 and min_space>80) :
+        if(count%random.randint(40,85)==0 and min_space>80) and run_paws:
             current_paw = CatPaw("./cat_paw.png")
             allsprites.add(current_paw)
             Cat_Paws.append(current_paw)
             min_space = 0
+            pawcount +=1
         
         for paw in Cat_Paws:
+            if not run_paws: 
+                paw.kill()
+                Cat_Paws.clear
             if p1.hitbox.colliderect(paw.rect):
                 p1.kill() 
                 bg_img = pygame.image.load('./you_lost.png')
                 bg_img = pygame.transform.scale(bg_img,(width, height))
                 screen.blit(bg_img, (0,0))
                 running_bg = False
+        if(pawcount==3):
+            bg_img = pygame.image.load('./you_lost.png')
+            bg_img = pygame.transform.scale(bg_img,(width, height))
+            screen.blit(bg_img, (0,0))
+            running_bg = False
+            run_paws = False
+            global win 
+            win = True
 
+
+            
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
@@ -99,6 +118,7 @@ class PlayerWasd(pygame.sprite.Sprite):
         hwidth = self.rect.width - 48
         hHieght = self.rect.height
         self.hitbox = pygame.Rect(hx,hy,hwidth,hHieght)
+        global win
     def update(self):
         keys = pygame.key.get_pressed()
         (x,y) = self.rect.topleft
@@ -111,7 +131,12 @@ class PlayerWasd(pygame.sprite.Sprite):
         if y > screen.get_height()-200:
             self.jumped = False
             self.gravity = 0
-        
+        while win:
+             if keys[pygame.K_LEFT]:
+                x-=5
+
+             if keys[pygame.K_RIGHT]:
+                x+=5
         self.rect.topleft = (x+ xvol, y +yvol)
         (hx,hy) = self.hitbox.topleft
         self.hitbox.topleft = (hx + xvol, y + yvol)
