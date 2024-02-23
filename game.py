@@ -8,7 +8,7 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Name Of The game")
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 64)
-
+Cat_Paws = []
 #main_dir = os.path.split(os.path.abspath(__file__))[0]
 #data_dir = os.path.join(main_dir, "data")
 #dishita - made change
@@ -23,27 +23,33 @@ def main():
     bg_img = pygame.transform.scale(bg_img,(width, height))
     i = 0
     count = 0
-    Cat_Paws = [p2]
+    Cat_Paws.append(p2)
     min_space = 0
+    running_bg = True
     while running:
-        screen.fill((0,0,0))
-        screen.blit(bg_img,(i,0))
-        screen.blit(bg_img,(width+i,0))
+        if(running_bg):
+            screen.blit(bg_img,(i,0))
+            screen.blit(bg_img,(width+i,0))
+            if(i==-width):
+                screen.blit(bg_img,(width+i,0))
+                i=0
+            i-=10
         count+=1
         min_space+=1
-        if(count%random.randint(40,85)==0 and min_space>50) :
+        if(count%random.randint(40,85)==0 and min_space>80) :
             current_paw = CatPaw("./cat_paw.png")
             allsprites.add(current_paw)
             Cat_Paws.append(current_paw)
             min_space = 0
-        if(i==-width):
-           screen.blit(bg_img,(width+i,0))
-           i=0
-        i-=10
+        
         for paw in Cat_Paws:
-            if p1.rect.colliderect(paw.rect):
+            if p1.hitbox.colliderect(paw.rect):
                 p1.kill() 
-                
+                bg_img = pygame.image.load('./you_lost.png')
+                bg_img = pygame.transform.scale(bg_img,(width, height))
+                screen.blit(bg_img, (0,0))
+                running_bg = False
+
         # poll for events
         # pygame.QUIT event means the user clicked X to close your window
         for event in pygame.event.get():
@@ -75,6 +81,7 @@ class CatPaw(pygame.sprite.Sprite):
         (x,y) = self.rect.topleft
         self.rect.topleft = (x-10,y)
         if (x==-10):
+            Cat_Paws.remove(self)
             self.kill()
 
 class PlayerWasd(pygame.sprite.Sprite):
@@ -87,12 +94,16 @@ class PlayerWasd(pygame.sprite.Sprite):
         self.jumpCount=20
         self.image, self.rect = load_image(image,scale=1)#adjust scale to get character sizing right
         self.rect.topleft = pygame.Vector2(screen.get_width()/90, screen.get_height() / 2)#adjust arugments for disired starting position
+        (hx,hy) = self.rect.topleft
+        hx = hx + 24
+        hwidth = self.rect.width - 48
+        hHieght = self.rect.height
+        self.hitbox = pygame.Rect(hx,hy,hwidth,hHieght)
     def update(self):
         keys = pygame.key.get_pressed()
         (x,y) = self.rect.topleft
         yvol = self.gravity
         xvol = 0
-
         if keys[pygame.K_SPACE] and not self.jumped:
             yvol -=190
             self.jumped = True
@@ -102,6 +113,8 @@ class PlayerWasd(pygame.sprite.Sprite):
             self.gravity = 0
         
         self.rect.topleft = (x+ xvol, y +yvol)
+        (hx,hy) = self.hitbox.topleft
+        self.hitbox.topleft = (hx + xvol, y + yvol)
 
 
 def writeToScreen(msg, x, y):
